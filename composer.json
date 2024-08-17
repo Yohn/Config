@@ -1,0 +1,23 @@
+{
+	"name": "yohns/config",
+	"type": "project",
+	"description": "Loading files in config folder and set in an array for use later.",
+	"license": "MIT",
+	"minimum-stability": "stable",
+	"authors": [
+		{
+			"name": "John Brittain III",
+			"email": "Yohn@coming-soon.com",
+			"homepage": "https://github.com/Yohn",
+			"role": "Developer"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"Yohns\\Core\\" : "Core/"
+		}
+	},
+	"require": {
+		"php": "^8.0"
+	}
+}
