@@ -2,6 +2,8 @@
 
 namespace Yohns\Core;
 
+use InvalidArgumentException;
+
 /**
  * Config class for managing application configurations.
  *
@@ -29,11 +31,11 @@ class Config {
 	 * Config constructor.
 	 *
 	 * @param string $directory Path to the directory containing configuration files.
-	 * @throws \InvalidArgumentException if the directory does not exist or is not readable.
+	 * @throws InvalidArgumentException if the directory does not exist or is not readable.
 	 */
 	public function __construct(string $directory = __DIR__ . '/../../../../lib/config') {
 		if (!is_dir($directory) || !is_readable($directory)) {
-			throw new \InvalidArgumentException("Directory does not exist or is not readable: $directory");
+			throw new InvalidArgumentException("Directory does not exist or is not readable: $directory");
 		}
 
 		$this->loadConfigurations($directory);
