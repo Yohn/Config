@@ -1,90 +1,106 @@
 <?php
+
 namespace Yohns\Core;
 
 /**
- * Class Config
+ * Config class for managing application configurations.
  *
- * This class manages site configurations. It loads configuration files from a specified directory
- * and provides static methods to get and set configuration values.
+ * Examples:
+ *
+ * // Initialize Config with a specific directory
+ * $config = new Yohns\Core\Config(__DIR__.'/../config');
+ * // Get a configuration value
+ * $dbHost = Yohns\Core\Config::get('db_host', 'database');
+ * // Set a custom configuration value
+ * Yohns\Core\Config::set('api_key', '12345');
+ * // Retrieve a custom configuration value
+ * $apiKey = Yohns\Core\Config::getCustom('api_key');
+ * // Reload configurations from a different directory
+ * Yohns\Core\Config::reload('/new/path/to/config');
  */
 class Config {
+
 	/**
-	 * @var array $c Stores the site configurations.
+	 * @var array Stores loaded configurations
 	 */
-	private static $c = []; // sites configs
+	private static array $configs = [];
 
 	/**
 	 * Config constructor.
 	 *
-	 * This constructor loads configuration files from the specified directory.
-	 * The configuration files are expected to be PHP files. The filenames are processed
-	 * to generate a unique key used to store the configuration in the `$c` array.
-	 *
 	 * @param string $directory Path to the directory containing configuration files.
+	 * @throws \InvalidArgumentException if the directory does not exist or is not readable.
 	 */
 	public function __construct(string $directory = __DIR__ . '/../../../../lib/config') {
 		if (!is_dir($directory) || !is_readable($directory)) {
-			throw new InvalidArgumentException("Directory does not exist or is not readable: $directory");
+			throw new \InvalidArgumentException("Directory does not exist or is not readable: $directory");
 		}
-		foreach (glob($directory."/*.php") as $filename){
+
+		$this->loadConfigurations($directory);
+	}
+
+	/**
+	 * Loads configuration files from a specified directory.
+	 *
+	 * @param string $directory Directory path where configuration files are stored.
+	 */
+	private function loadConfigurations(string $directory): void {
+		foreach (glob($directory . "/*.php") as $filename) {
 			$key = $this->makeKey($filename);
-			self::$c[$key] = include $filename;
+			self::$configs[$key] = include $filename;
 		}
 	}
 
 	/**
-   * Generate a configuration key based on the filename.
-   *
-   * @param string $filename The full path to the configuration file.
-   * @return string The generated configuration key.
-   */
+	 * Generates a configuration key based on filename.
+	 *
+	 * @param string $filename Name of the file.
+	 * @return string Key generated from the filename.
+	 */
 	private function makeKey(string $filename): string {
-		$file = basename($filename);
-		$parts = explode('_', $file);
-		//$config_str = implode('', array_map(fn($part) => substr($part, 0, 1), $parts));
-		$config_str = '';
-		foreach ($parts as $v) {
-			$config_str .= substr($v, 0, 1);
-		}
-		return strtolower($config_str);
+		return strtolower(pathinfo($filename, PATHINFO_FILENAME));
 	}
 
 	/**
 	 * Retrieves a configuration value.
 	 *
-	 * This method fetches a value from the configuration array based on the provided key.
-	 *
-	 * @param string $key The key of the configuration item to retrieve.
-	 * @param string $file The configuration group to retrieve the item from. Default is 'c'.
-	 * @return mixed The configuration value, or `false` if the key does not exist.
+	 * @param string $key The key of the configuration to retrieve.
+	 * @param string $configFile The configuration file identifier.
+	 * @return mixed The value of the configuration, or null if not found.
 	 */
-	public static function get(string $key, string $file = 'c'): mixed {
-		return self::$c[strtolower($file)][$key] ?? false;
-	}
-
-		/**
-	 * Retrieves a configuration value.
-	 *
-	 * This method fetches a value from the configuration array based on the provided key.
-	 *
-	 * @param string $key The key of the configuration item to retrieve.
-	 * @return mixed The configuration value, or `false` if the key does not exist.
-	 */
-	public static function getCustom(string $key): mixed {
-		return self::$c['inline'][$key] ?? false;
+	public static function get(string $key, string $configFile = 'default'): mixed {
+		$configFile = strtolower($configFile);
+		return self::$configs[$configFile][$key] ?? null;
 	}
 
 	/**
 	 * Sets a configuration value.
 	 *
-	 * This method sets a value in the configuration array for the specified key.
-	 *
-	 * @param string $key The key of the configuration item to set.
-	 * @param mixed $value The value to set for the specified key.
-	 * @param string $file The configuration group to set the item in. Default is 'inline'.
-	 * @return bool Returns `true` after the value is set.
+	 * @param string $key The key of the configuration to set.
+	 * @param mixed $value The value to assign to the configuration.
+	 * @param string $configFile The configuration file identifier.
 	 */
-	public static function set(string $key, mixed $value, string $file = 'inline'): void {
-		self::$c[$file][$key] = $value;
+	public static function set(string $key, mixed $value, string $configFile = 'inline'): void {
+		self::$configs[$configFile][$key] = $value;
+	}
+
+	/**
+	 * Retrieves a custom configuration value.
+	 *
+	 * @param string $key The key of the custom configuration to retrieve.
+	 * @return mixed The value of the custom configuration, or null if not found.
+	 */
+	public static function getCustom(string $key): mixed {
+		return self::$configs['inline'][$key] ?? null;
+	}
+
+	/**
+	 * Reloads configurations from a specified directory.
+	 *
+	 * @param string $directory Directory path to reload configuration files from.
+	 */
+	public static function reload(string $directory): void {
+		self::$configs = [];
+		(new self($directory));
 	}
 }
