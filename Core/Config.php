@@ -8,7 +8,7 @@ use InvalidArgumentException;
  * Config class for managing application configurations.
  *
  * Examples:
- *
+ * ```php
  * // Initialize Config with a specific directory
  * $config = new Yohns\Core\Config(__DIR__.'/../config');
  * // Get a configuration value
@@ -19,6 +19,7 @@ use InvalidArgumentException;
  * $apiKey = Yohns\Core\Config::getCustom('api_key');
  * // Reload configurations from a different directory
  * Yohns\Core\Config::reload('/new/path/to/config');
+ * ```
  */
 class Config {
 
@@ -73,6 +74,17 @@ class Config {
 	public static function get(string $key, string $configFile = 'default'): mixed {
 		$configFile = strtolower($configFile);
 		return self::$configs[$configFile][$key] ?? null;
+	}
+
+	/**
+	 * Retrieve all configuration values for file.
+	 *
+	 * @param string $configFile The configuration file identifier.
+	 * @return mixed The value of the configuration, or null if not found.
+	 */
+	public static function getAll(string $configFile = 'default'): mixed {
+		$configFile = strtolower($configFile);
+		return self::$configs[$configFile] ?? null;
 	}
 
 	/**
