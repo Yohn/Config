@@ -8,7 +8,7 @@ use InvalidArgumentException;
  * Config class for managing application configurations.
  *
  * Examples:
- *
+ * ```php
  * // Initialize Config with a specific directory
  * $config = new Yohns\Core\Config(__DIR__.'/../config');
  * // Get a configuration value
@@ -19,6 +19,7 @@ use InvalidArgumentException;
  * $apiKey = Yohns\Core\Config::getCustom('api_key');
  * // Reload configurations from a different directory
  * Yohns\Core\Config::reload('/new/path/to/config');
+ * ```
  */
 class Config {
 
@@ -26,6 +27,14 @@ class Config {
 	 * @var array Stores loaded configurations
 	 */
 	private static array $configs = [];
+	/**
+	 * @var array Stores loaded configuration files
+	 */
+	protected static array $configFilePaths = [];
+	/**
+	 * @var string Stores config path
+	 */
+	protected static string $configDirPath;
 
 	/**
 	 * Config constructor.
@@ -37,7 +46,6 @@ class Config {
 		if (!is_dir($directory) || !is_readable($directory)) {
 			throw new InvalidArgumentException("Directory does not exist or is not readable: $directory");
 		}
-
 		$this->loadConfigurations($directory);
 	}
 
@@ -47,9 +55,12 @@ class Config {
 	 * @param string $directory Directory path where configuration files are stored.
 	 */
 	private function loadConfigurations(string $directory): void {
+		self::$configDirPath = $directory;
+
 		foreach (glob($directory . "/*.php") as $filename) {
 			$key = $this->makeKey($filename);
 			self::$configs[$key] = include $filename;
+			self::$configFilePaths[$key] = $filename;
 		}
 	}
 
@@ -73,6 +84,17 @@ class Config {
 	public static function get(string $key, string $configFile = 'default'): mixed {
 		$configFile = strtolower($configFile);
 		return self::$configs[$configFile][$key] ?? null;
+	}
+
+	/**
+	 * Retrieve all configuration values for file.
+	 *
+	 * @param string $configFile The configuration file identifier.
+	 * @return mixed The value of the configuration, or null if not found.
+	 */
+	public static function getAll(string $configFile = 'default'): mixed {
+		$configFile = strtolower($configFile);
+		return self::$configs[$configFile] ?? null;
 	}
 
 	/**

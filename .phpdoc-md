@@ -1,0 +1,10 @@
+<?php
+return (object)[
+    'rootNamespace' => 'Yohns\Core',
+    'destDirectory' => 'docs',
+    'format' => 'github',
+    'classes' => [
+        'Yohns\Core\Config',
+        'Yohns\Core\ConfigEditor',
+    ],
+];

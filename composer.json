@@ -19,5 +19,8 @@
 	},
 	"require": {
 		"php": "^8.0"
+	},
+	"require-dev": {
+		"clean/phpdoc-md": "^0.19.3"
 	}
 }
