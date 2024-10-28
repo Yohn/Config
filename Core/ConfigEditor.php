@@ -30,7 +30,8 @@ class ConfigEditor extends Config {
 	public static function addToConfig(array $newData, string $configFile, $overwrite = false): mixed {
 		// Check if the specified configuration key exists in the parent config
 		self::$config = parent::getAll($configFile);
-		self::$overwrite = $overwrite;
+		// removed ability to overwrite config because we get the same key multiple times.
+		self::$overwrite = false; //$overwrite;
 		if(self::$config === null){
 			// so we can check for the existence of the key when we add $newData
 			self::$config = [];

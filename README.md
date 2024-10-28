@@ -18,8 +18,9 @@ Base configuration class that stores the value from returning arrays in php file
 >  Add, Edit, and Create Configs
 > * Create new config files (for new repos that may get added?),
 > * Add new key => value pairs to a config file already found.
-> * Edit values for predefined configs, you have
->   * You have to set the allow override option to true, default is false
+> * ~~Edit values for predefined configs, you have~~
+>   * ~~You have to set the allow override option to true, default is false~~
+> Removed editing because it doubles up the same key.
 
 ### Methods
 
