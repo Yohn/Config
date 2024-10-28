@@ -14,7 +14,8 @@ Base configuration class that stores the value from returning arrays in php file
 |[set](#configset)|Sets a configuration value.|
 
 ## [ConfigEditor](ConfigEditor.md)
-> [!TIP] Add Edit and Create Configs
+> [!Tip]
+>  Add, Edit, and Create Configs
 > * Create new config files (for new repos that may get added?),
 > * Add new key => value pairs to a config file already found.
 > * Edit values for predefined configs, you have
