@@ -1,20 +1,21 @@
 # Yohns\Core\Config
 
-## [Config](Config.md)
+## [Config](docs/Config.md)
 Base configuration class that stores the value from returning arrays in php files.
 ### Methods
 
 | Name | Description |
 |------|-------------|
-|[__construct](#config__construct)|Config constructor.|
-|[get](#configget)|Retrieves a configuration value.|
-|[getAll](#configgetall)|Retrieve all configuration values for file.|
-|[getCustom](#configgetcustom)|Retrieves a custom configuration value.|
-|[reload](#configreload)|Reloads configurations from a specified directory.|
-|[set](#configset)|Sets a configuration value.|
+|[__construct](docs/#config__construct)|Config constructor.|
+|[get](docs/#configget)|Retrieves a configuration value.|
+|[getAll](docs/#configgetall)|Retrieve all configuration values for file.|
+|[getCustom](docs/#configgetcustom)|Retrieves a custom configuration value.|
+|[reload](docs/#configreload)|Reloads configurations from a specified directory.|
+|[set](docs/#configset)|Sets a configuration value.|
 
-## [ConfigEditor](ConfigEditor.md)
-> [!TIP] Add Edit and Create Configs
+## [ConfigEditor](docs/ConfigEditor.md)
+> [!TIP]
+>  Add, Edit, and Create Configs
 > * Create new config files (for new repos that may get added?),
 > * Add new key => value pairs to a config file already found.
 > * Edit values for predefined configs, you have
@@ -24,12 +25,14 @@ Base configuration class that stores the value from returning arrays in php file
 
 | Name | Description |
 |------|-------------|
-|[addToConfig](#configeditoraddtoconfig)|Adds key-value pairs to a configuration array if they do not already exist in the specified configuration file. If the file does not exist, it creates a new configuration file with the provided data.|
+|[addToConfig](docs/#configeditoraddtoconfig)|Adds key-value pairs to a configuration array if they do not already exist in the specified configuration file. If the file does not exist, it creates a new configuration file with the provided data.|
 
 ---
 ---
 
 Put all config files in 1 directory and then call that directory and it'll load all the config files to the variable
+
+Check out the [Example File](Example.php)
 
 Use composers autoload or include path to the Core/Config.php file
 
@@ -53,7 +56,7 @@ Config::set('api_key', '12345');
 // Retrieve a custom configuration value
 echo Config::getCustom('api_key').PHP_EOL;
 ```
-
+### Example ConfigEditor
 ```php
 use Yohns\Core\Config;
 use Yohns\Core\ConfigEditor;
