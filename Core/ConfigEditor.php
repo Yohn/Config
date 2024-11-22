@@ -25,9 +25,9 @@ class ConfigEditor extends Config {
 	 *
 	 * @param array $newData The associative array of key-value pairs to add to the config.
 	 * @param string $configFile The name of the config file (without the '.php' extension) to modify.
-	 * @return mixed
+	 * @return void
 	 */
-	public static function addToConfig(array $newData, string $configFile, $overwrite = false): mixed {
+	public static function addToConfig(array $newData, string $configFile, $overwrite = false): void {
 		// Check if the specified configuration key exists in the parent config
 		self::$config = parent::getAll($configFile);
 		// removed ability to overwrite config because we get the same key multiple times.
