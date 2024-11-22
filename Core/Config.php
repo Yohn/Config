@@ -35,6 +35,7 @@ class Config {
 	 * @var string Stores config path
 	 */
 	protected static string $configDirPath;
+	protected static string $default;
 
 	/**
 	 * Config constructor.
@@ -42,10 +43,11 @@ class Config {
 	 * @param string $directory Path to the directory containing configuration files.
 	 * @throws InvalidArgumentException if the directory does not exist or is not readable.
 	 */
-	public function __construct(string $directory = __DIR__ . '/../../../../lib/config') {
+	public function __construct(string $directory = __DIR__ . '/../../../../lib/config', string $default = 'config') {
 		if (!is_dir($directory) || !is_readable($directory)) {
 			throw new InvalidArgumentException("Directory does not exist or is not readable: $directory");
 		}
+		self::$default = $default;
 		$this->loadConfigurations($directory);
 	}
 
@@ -56,7 +58,6 @@ class Config {
 	 */
 	private function loadConfigurations(string $directory): void {
 		self::$configDirPath = $directory;
-
 		foreach (glob($directory . "/*.php") as $filename) {
 			$key = $this->makeKey($filename);
 			self::$configs[$key] = include $filename;
@@ -81,7 +82,10 @@ class Config {
 	 * @param string $configFile The configuration file identifier.
 	 * @return mixed The value of the configuration, or null if not found.
 	 */
-	public static function get(string $key, string $configFile = 'default'): mixed {
+	public static function get(string $key, string $configFile = ''): mixed {
+		if($configFile === ''){
+			$configFile = self::$default;
+		}
 		$configFile = strtolower($configFile);
 		return self::$configs[$configFile][$key] ?? null;
 	}
@@ -92,7 +96,10 @@ class Config {
 	 * @param string $configFile The configuration file identifier.
 	 * @return mixed The value of the configuration, or null if not found.
 	 */
-	public static function getAll(string $configFile = 'default'): mixed {
+	public static function getAll(string $configFile = ''): mixed {
+		if($configFile === ''){
+			$configFile = self::$default;
+		}
 		$configFile = strtolower($configFile);
 		return self::$configs[$configFile] ?? null;
 	}
